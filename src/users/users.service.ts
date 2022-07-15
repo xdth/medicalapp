@@ -25,18 +25,23 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     const updateUser = await this.usersRepository.findOne({ where: { id } });
 
-    if (updateUser) {
-      updateUser.username = updateUserDto.username;
-      updateUser.email = updateUserDto.email;
-      updateUser.password = updateUserDto.password;
-      return this.usersRepository.save(updateUser);
+    if (!updateUser) {
+      return `User ${id} not found`
     }
 
-    return `User ${id} not found`
+    updateUser.username = updateUserDto.username;
+    updateUser.email = updateUserDto.email;
+    updateUser.password = updateUserDto.password;
+    return this.usersRepository.save(updateUser);
   }
 
   async remove(id: number) {
     const removeUser = await this.usersRepository.findOne({ where: { id } });
+
+    if (!removeUser) {
+      return `User ${id} not found`
+    }
+
     return this.usersRepository.remove(removeUser);
   }
 }
