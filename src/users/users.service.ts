@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,7 +26,7 @@ export class UsersService {
     const updateUser = await this.usersRepository.findOne({ where: { id } });
 
     if (!updateUser) {
-      return `User ${id} not found`
+      throw new HttpException(`User ${id} not found`, HttpStatus.PRECONDITION_FAILED);
     }
 
     updateUser.username = updateUserDto.username;
@@ -39,7 +39,7 @@ export class UsersService {
     const removeUser = await this.usersRepository.findOne({ where: { id } });
 
     if (!removeUser) {
-      return `User ${id} not found`
+      throw new HttpException(`User ${id} not found`, HttpStatus.PRECONDITION_FAILED);
     }
 
     return this.usersRepository.remove(removeUser);
